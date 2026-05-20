@@ -1,0 +1,36 @@
+{
+  "name": "gestao-contratos",
+  "version": "1.0.0",
+  "description": "Sistema de gestão de contratos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasdecarfonseca-cmyk/gestao-contratos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/lucasdecarfonseca-cmyk/gestao-contratos/issues"
+  },
+  "homepage": "https://github.com/lucasdecarfonseca-cmyk/gestao-contratos#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.106.1",
+    "@tailwindcss/vite": "^4.3.0",
+    "@vitejs/plugin-react": "^6.0.2",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^1.16.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "tailwindcss": "^4.3.0",
+    "vite": "^8.0.13",
+    "xlsx": "^0.18.5"
+  }
+}

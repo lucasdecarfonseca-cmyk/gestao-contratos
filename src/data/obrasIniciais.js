@@ -1,0 +1,88 @@
+export const obrasIniciais = [
+  {
+    id: 1,
+    nome: 'Galpão Industrial Zona Norte',
+    local: 'São Paulo — SP',
+    status: 'Em andamento',
+    montagem: {
+      avancaFisico: 35,
+      resumo: {
+        empresaMontador: 'Montagens Rápidas do Brasil Ltda',
+        empresaPreMontagem: 'Medajoists Pré-Montagem',
+        totalBrutoMontador: 480000,
+        totalRetencao: 24000,
+        totalPreMontagem: 15000,
+      },
+      verbas: [
+        { id: 1, descricao: 'Montador', orcado: 500000, contratado: 480000, avancaFinanceiro: 0 },
+        { id: 2, descricao: 'Guindaste / Perfilação', orcado: 150000, contratado: 140000, avancaFinanceiro: 43000 },
+        { id: 3, descricao: 'Despesas Indiretas (DI)', orcado: 30000, contratado: 28000, avancaFinanceiro: 8400 },
+      ],
+      medicoes: [
+        {
+          id: 1,
+          numero: '01',
+          periodoInicio: '2025-02-01',
+          periodoFim: '2025-02-28',
+          valorBruto: 110000,
+          descontos: 5000,
+          retencao: 5500,
+          valorFaturado: 99500,
+        },
+        {
+          id: 2,
+          numero: '02',
+          periodoInicio: '2025-03-01',
+          periodoFim: '2025-03-31',
+          valorBruto: 90000,
+          descontos: 3000,
+          retencao: 4500,
+          valorFaturado: 82500,
+        },
+      ],
+    },
+  },
+  {
+    id: 2,
+    nome: 'Estrutura de Cobertura Shopping Bela Vista',
+    local: 'Campinas — SP',
+    status: 'Em andamento',
+    montagem: {
+      avancaFisico: 82,
+      resumo: {
+        empresaMontador: 'Estruturas & Cia Montagens',
+        empresaPreMontagem: '',
+        totalBrutoMontador: 310000,
+        totalRetencao: 15500,
+        totalPreMontagem: 0,
+      },
+      verbas: [
+        { id: 1, descricao: 'Montador', orcado: 320000, contratado: 310000, avancaFinanceiro: 0 },
+        { id: 2, descricao: 'Guindaste / Perfilação', orcado: 80000, contratado: 75000, avancaFinanceiro: 75000 },
+        { id: 3, descricao: 'Despesas Indiretas (DI)', orcado: 15000, contratado: 14000, avancaFinanceiro: 14000 },
+      ],
+      medicoes: [
+        {
+          id: 1,
+          numero: '01',
+          periodoInicio: '2025-01-01',
+          periodoFim: '2025-01-31',
+          valorBruto: 155000,
+          descontos: 7000,
+          retencao: 7750,
+          valorFaturado: 140250,
+        },
+        {
+          id: 2,
+          numero: '02',
+          periodoInicio: '2025-02-01',
+          periodoFim: '2025-02-28',
+          valorBruto: 120000,
+          descontos: 5000,
+          retencao: 6000,
+          valorFaturado: 109000,
+        },
+      ],
+    },
+  },
+]
