@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { ArrowLeft, Download } from 'lucide-react'
 import OrcadoContratado from './OrcadoContratado'
 import Medicoes from './Medicoes'
+import CadernoObra from './CadernoObra'
 import { exportarObra } from '../utils/exportarExcel'
 
 const TABS = [
-  { id: 'orcado', label: 'Orçado x Contratado' },
+  { id: 'orcado',   label: 'Orçado x Contratado' },
   { id: 'medicoes', label: 'Medições' },
+  { id: 'caderno',  label: 'Caderno da Obra' },
 ]
 
 export default function PainelObra({ obra, onUpdate, onBack, isAdmin }) {
@@ -52,8 +54,9 @@ export default function PainelObra({ obra, onUpdate, onBack, isAdmin }) {
         ))}
       </div>
 
-      {tab === 'orcado' && <OrcadoContratado obra={obra} onUpdate={onUpdate} isAdmin={isAdmin} />}
+      {tab === 'orcado'   && <OrcadoContratado obra={obra} onUpdate={onUpdate} isAdmin={isAdmin} />}
       {tab === 'medicoes' && <Medicoes obra={obra} onUpdate={onUpdate} isAdmin={isAdmin} />}
+      {tab === 'caderno'  && <CadernoObra obra={obra} onUpdate={onUpdate} isAdmin={isAdmin} />}
     </div>
   )
 }

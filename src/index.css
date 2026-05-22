@@ -9,3 +9,74 @@
     @apply w-full text-sm border border-slate-200 rounded-xl px-3 py-2.5 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-colors;
   }
 }
+
+/* ── Caderno da Obra — rich text editor ─────────────────────────────────────── */
+
+.caderno-editor:focus {
+  outline: none;
+}
+
+.caderno-editor[contenteditable="true"]:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.caderno-editor h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1A4A6B;
+  margin: 1.2rem 0 0.4rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.25rem;
+}
+
+.caderno-editor h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  margin: 1rem 0 0.3rem;
+}
+
+.caderno-editor p {
+  margin: 0.4rem 0;
+}
+
+.caderno-editor ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin: 0.4rem 0;
+}
+
+.caderno-editor ol {
+  list-style: decimal;
+  padding-left: 1.4rem;
+  margin: 0.4rem 0;
+}
+
+.caderno-editor li {
+  margin: 0.15rem 0;
+}
+
+.caderno-editor hr {
+  border: none;
+  border-top: 2px solid #e2e8f0;
+  margin: 1rem 0;
+}
+
+.caderno-editor img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0.5rem 0;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.caderno-editor b, .caderno-editor strong {
+  font-weight: 700;
+}
+
+.caderno-editor i, .caderno-editor em {
+  font-style: italic;
+}

@@ -20,6 +20,7 @@ function rowToObra(row, medicoes = []) {
     nome: row.nome || '',
     local: row.local || '',
     status: row.status || '',
+    caderno: row.caderno || '',
     montagem: {
       avancaFisico: row.af_fisico || 0,
       resumo: {
@@ -68,6 +69,7 @@ function obraToRow(obra) {
     nome:                 obra.nome,
     local:                obra.local || '',
     status:               obra.status || '',
+    caderno:              obra.caderno ?? null,
     af_fisico:            avancaFisico || 0,
     orcado_montador:      montador.orcado    || 0,
     orcado_guindaste:     guindaste.orcado   || 0,
