@@ -3,7 +3,7 @@ import { useState } from 'react'
 const fmt = (v) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v ?? 0)
 
-export default function OrcadoContratado({ obra, onUpdate }) {
+export default function OrcadoContratado({ obra, onUpdate, isAdmin }) {
   const { verbas, medicoes } = obra.montagem
 
   const montadorAvanco = medicoes.reduce(
@@ -50,12 +50,14 @@ export default function OrcadoContratado({ obra, onUpdate }) {
                   <EditCell
                     value={verba.orcado}
                     onChange={v => updateVerba(verba.id, 'orcado', v)}
+                    isAdmin={isAdmin}
                   />
                 </td>
                 <td className="px-5 py-3.5 text-right">
                   <EditCell
                     value={verba.contratado}
                     onChange={v => updateVerba(verba.id, 'contratado', v)}
+                    isAdmin={isAdmin}
                   />
                 </td>
                 <td className="px-5 py-3.5 text-right">
@@ -67,6 +69,7 @@ export default function OrcadoContratado({ obra, onUpdate }) {
                     <EditCell
                       value={avanco}
                       onChange={v => updateVerba(verba.id, 'avancaFinanceiro', v)}
+                      isAdmin={isAdmin}
                     />
                   )}
                 </td>
@@ -87,11 +90,12 @@ export default function OrcadoContratado({ obra, onUpdate }) {
   )
 }
 
-function EditCell({ value, onChange }) {
+function EditCell({ value, onChange, isAdmin }) {
   const [editing, setEditing] = useState(false)
   const [temp, setTemp] = useState('')
 
   function start() {
+    if (!isAdmin) return
     setTemp(String(value))
     setEditing(true)
   }
@@ -114,12 +118,14 @@ function EditCell({ value, onChange }) {
     )
   }
 
-  return (
+  return isAdmin ? (
     <button
       onClick={start}
       className="text-slate-700 hover:text-blue-600 hover:underline tabular-nums"
     >
       {fmt(value)}
     </button>
+  ) : (
+    <span className="text-slate-700 tabular-nums">{fmt(value)}</span>
   )
 }

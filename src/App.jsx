@@ -1,29 +1,33 @@
 import { useState, useEffect, useRef } from 'react'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { Loader2, AlertCircle, LogOut } from 'lucide-react'
 import ListaObras from './components/ListaObras'
 import PainelObra from './components/PainelObra'
+import LoginScreen from './components/LoginScreen'
 import { carregarObras, criarObra, sincronizarObra, excluirObra } from './lib/db'
+import { getSession, clearSession } from './auth'
 
 export default function App() {
-  const [obras, setObras]       = useState([])
-  const [obraId, setObraId]     = useState(null)
-  const [loading, setLoading]   = useState(true)
+  const [user, setUser]           = useState(() => getSession())
+  const [obras, setObras]         = useState([])
+  const [obraId, setObraId]       = useState(null)
+  const [loading, setLoading]     = useState(true)
   const [loadError, setLoadError] = useState(null)
-  const [syncing, setSyncing]   = useState(0)   // contador de ops em voo
+  const [syncing, setSyncing]     = useState(0)
   const [syncError, setSyncError] = useState(null)
   const syncErrTimer = useRef(null)
 
-  // Carrega dados do Supabase na montagem
+  const isAdmin = user?.role === 'admin'
+
   useEffect(() => {
+    if (!user) { setLoading(false); return }
     carregarObras()
       .then(setObras)
       .catch(e => setLoadError(e.message ?? String(e)))
       .finally(() => setLoading(false))
-  }, [])
+  }, [user])
 
   const obraSelecionada = obras.find(o => o.id === obraId) ?? null
 
-  // Wrapper que incrementa/decrementa o contador de sincronização
   async function comSync(fn) {
     setSyncing(n => n + 1)
     try {
@@ -56,6 +60,21 @@ export default function App() {
     setObras(prev => prev.filter(o => o.id !== id))
     if (obraId === id) setObraId(null)
     comSync(() => excluirObra(id))
+  }
+
+  function handleLogout() {
+    clearSession()
+    setUser(null)
+    setObras([])
+    setObraId(null)
+    setLoading(true)
+    setLoadError(null)
+  }
+
+  // ── Sem sessão: tela de login ──────────────────────────────────────────────
+
+  if (!user) {
+    return <LoginScreen onLogin={u => { setUser(u); setLoading(true) }} />
   }
 
   // ── Loading / erro de conexão ──────────────────────────────────────────────
@@ -112,8 +131,7 @@ export default function App() {
           </>
         )}
 
-        {/* Indicador de sincronização */}
-        <div className="ml-auto flex items-center gap-2 min-w-0">
+        <div className="ml-auto flex items-center gap-3 min-w-0">
           {syncing > 0 && !syncError && (
             <span className="flex items-center gap-1.5 text-xs text-slate-400 whitespace-nowrap">
               <Loader2 className="w-3 h-3 animate-spin shrink-0" />
@@ -126,6 +144,17 @@ export default function App() {
               {syncError}
             </span>
           )}
+          <span className="text-xs text-slate-500 whitespace-nowrap hidden sm:inline">
+            {user.username}
+          </span>
+          <button
+            onClick={handleLogout}
+            title="Sair"
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors whitespace-nowrap"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Sair
+          </button>
         </div>
       </header>
 
@@ -136,6 +165,7 @@ export default function App() {
           onUpdate={handleUpdateObra}
           onAdd={handleAddObra}
           onDelete={handleDeleteObra}
+          isAdmin={isAdmin}
         />
       ) : (
         obraSelecionada && (
@@ -143,6 +173,7 @@ export default function App() {
             obra={obraSelecionada}
             onUpdate={(updater) => handleUpdateObra(obraId, updater)}
             onBack={() => setObraId(null)}
+            isAdmin={isAdmin}
           />
         )
       )}

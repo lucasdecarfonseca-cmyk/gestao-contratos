@@ -24,7 +24,7 @@ function calcStats(obra) {
   return { totalOrcado, totalLiquidoMedido, afFinanceiro, afFisico, diffPct, diffValor, base }
 }
 
-export default function ListaObras({ obras, onSelect, onUpdate, onAdd, onDelete }) {
+export default function ListaObras({ obras, onSelect, onUpdate, onAdd, onDelete, isAdmin }) {
   const [showNovaObra, setShowNovaObra] = useState(false)
   const [editingObra, setEditingObra] = useState(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
@@ -45,13 +45,15 @@ export default function ListaObras({ obras, onSelect, onUpdate, onAdd, onDelete 
               Exportar Relatório Geral
             </button>
           )}
-          <button
-            onClick={() => setShowNovaObra(true)}
-            className="flex items-center gap-1.5 text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Nova Obra
-          </button>
+          {isAdmin && (
+            <button
+              onClick={() => setShowNovaObra(true)}
+              className="flex items-center gap-1.5 text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Nova Obra
+            </button>
+          )}
         </div>
       </div>
 
@@ -65,9 +67,10 @@ export default function ListaObras({ obras, onSelect, onUpdate, onAdd, onDelete 
             key={obra.id}
             obra={obra}
             onSelect={onSelect}
-            onUpdate={onUpdate}
-            onEdit={() => setEditingObra(obra)}
-            onDelete={() => setConfirmDeleteId(obra.id)}
+            onUpdate={isAdmin ? onUpdate : null}
+            onEdit={isAdmin ? () => setEditingObra(obra) : null}
+            onDelete={isAdmin ? () => setConfirmDeleteId(obra.id) : null}
+            isAdmin={isAdmin}
           />
         ))}
       </div>
@@ -133,12 +136,13 @@ export default function ListaObras({ obras, onSelect, onUpdate, onAdd, onDelete 
   )
 }
 
-function ObraCard({ obra, onSelect, onUpdate, onEdit, onDelete }) {
+function ObraCard({ obra, onSelect, onUpdate, onEdit, onDelete, isAdmin }) {
   const stats = calcStats(obra)
   const [editingFisico, setEditingFisico] = useState(false)
   const [tempFisico, setTempFisico] = useState('')
 
   function startEdit(e) {
+    if (!isAdmin) return
     e.stopPropagation()
     setTempFisico(String(obra.montagem.avancaFisico))
     setEditingFisico(true)
@@ -167,20 +171,24 @@ function ObraCard({ obra, onSelect, onUpdate, onEdit, onDelete }) {
         </div>
         {/* Action buttons + chevron */}
         <div className="flex items-center gap-0.5 shrink-0" onClick={e => e.stopPropagation()}>
-          <button
-            onClick={onEdit}
-            title="Editar obra"
-            className="p-1.5 rounded-md text-slate-300 hover:text-blue-500 hover:bg-blue-50 transition-colors"
-          >
-            <Pencil className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={onDelete}
-            title="Excluir obra"
-            className="p-1.5 rounded-md text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
+          {isAdmin && (
+            <>
+              <button
+                onClick={onEdit}
+                title="Editar obra"
+                className="p-1.5 rounded-md text-slate-300 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={onDelete}
+                title="Excluir obra"
+                className="p-1.5 rounded-md text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </>
+          )}
           <ChevronRight className="w-4 h-4 text-slate-300 ml-0.5" />
         </div>
       </div>
@@ -226,7 +234,7 @@ function ObraCard({ obra, onSelect, onUpdate, onEdit, onDelete }) {
                   onBlur={saveFisico}
                   onKeyDown={e => { if (e.key === 'Enter') saveFisico(e) }}
                 />
-              ) : (
+              ) : isAdmin ? (
                 <button
                   onClick={startEdit}
                   className="font-semibold text-emerald-600 hover:underline"
@@ -234,6 +242,8 @@ function ObraCard({ obra, onSelect, onUpdate, onEdit, onDelete }) {
                 >
                   {pct(stats.afFisico)}
                 </button>
+              ) : (
+                <span className="font-semibold text-emerald-600">{pct(stats.afFisico)}</span>
               )}
             </span>
           </div>

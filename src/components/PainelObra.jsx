@@ -9,7 +9,7 @@ const TABS = [
   { id: 'medicoes', label: 'Medições' },
 ]
 
-export default function PainelObra({ obra, onUpdate, onBack }) {
+export default function PainelObra({ obra, onUpdate, onBack, isAdmin }) {
   const [tab, setTab] = useState('orcado')
 
   return (
@@ -52,8 +52,8 @@ export default function PainelObra({ obra, onUpdate, onBack }) {
         ))}
       </div>
 
-      {tab === 'orcado' && <OrcadoContratado obra={obra} onUpdate={onUpdate} />}
-      {tab === 'medicoes' && <Medicoes obra={obra} onUpdate={onUpdate} />}
+      {tab === 'orcado' && <OrcadoContratado obra={obra} onUpdate={onUpdate} isAdmin={isAdmin} />}
+      {tab === 'medicoes' && <Medicoes obra={obra} onUpdate={onUpdate} isAdmin={isAdmin} />}
     </div>
   )
 }

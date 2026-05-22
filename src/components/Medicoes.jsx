@@ -12,7 +12,7 @@ const fmtDate = (s) => {
 
 const pct = (v) => `${(v ?? 0).toFixed(1)}%`
 
-export default function Medicoes({ obra, onUpdate }) {
+export default function Medicoes({ obra, onUpdate, isAdmin }) {
   const { resumo, medicoes } = obra.montagem
   const [medicaoAtiva, setMedicaoAtiva] = useState(medicoes[0]?.id ?? null)
 
@@ -90,6 +90,7 @@ export default function Medicoes({ obra, onUpdate }) {
             value={resumo.empresaMontador}
             onChange={v => updateResumo('empresaMontador', v)}
             type="text"
+            readOnly={!isAdmin}
           />
           <ResumoField
             label="Empresa Pré-montagem"
@@ -97,12 +98,14 @@ export default function Medicoes({ obra, onUpdate }) {
             onChange={v => updateResumo('empresaPreMontagem', v)}
             type="text"
             optional
+            readOnly={!isAdmin}
           />
           <div className="md:col-start-1">
             <ResumoField
               label="Total Bruto Valor Montador"
               value={resumo.totalBrutoMontador}
               onChange={v => updateResumo('totalBrutoMontador', v)}
+              readOnly={!isAdmin}
             />
           </div>
           <ResumoField
@@ -110,12 +113,14 @@ export default function Medicoes({ obra, onUpdate }) {
             value={resumo.totalRetencao}
             onChange={v => updateResumo('totalRetencao', v)}
             optional
+            readOnly={!isAdmin}
           />
           <ResumoField
             label="Total Pré-montagem Medajoists"
             value={resumo.totalPreMontagem}
             onChange={v => updateResumo('totalPreMontagem', v)}
             optional
+            readOnly={!isAdmin}
           />
           <ResumoField
             label="Total Líquido Montador"
@@ -156,13 +161,15 @@ export default function Medicoes({ obra, onUpdate }) {
               Medição {m.numero}
             </button>
           ))}
-          <button
-            onClick={addMedicao}
-            className="flex items-center gap-1 px-3 py-2 text-sm text-slate-400 hover:text-blue-600 transition-colors ml-1"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Nova Medição
-          </button>
+          {isAdmin && (
+            <button
+              onClick={addMedicao}
+              className="flex items-center gap-1 px-3 py-2 text-sm text-slate-400 hover:text-blue-600 transition-colors ml-1"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Nova Medição
+            </button>
+          )}
         </div>
 
         {medicaoAtual ? (
@@ -170,6 +177,7 @@ export default function Medicoes({ obra, onUpdate }) {
             <MedicaoForm
               medicao={medicaoAtual}
               onUpdate={(field, value) => updateMedicao(medicaoAtual.id, field, value)}
+              isAdmin={isAdmin}
             />
           </div>
         ) : (
@@ -207,7 +215,7 @@ function ResumoField({ label, value, onChange, readOnly, optional, highlight, ty
       <p className="text-xs text-slate-400 mb-1">
         {label}
         {optional && <span className="text-slate-300 ml-1">(opcional)</span>}
-        {readOnly && <span className="text-slate-300 ml-1">calculado</span>}
+        {readOnly && !onChange && <span className="text-slate-300 ml-1">calculado</span>}
       </p>
       {editing ? (
         <input
@@ -234,7 +242,7 @@ function ResumoField({ label, value, onChange, readOnly, optional, highlight, ty
   )
 }
 
-function MedicaoForm({ medicao, onUpdate }) {
+function MedicaoForm({ medicao, onUpdate, isAdmin }) {
   const liquidoMedido = medicao.valorBruto - medicao.descontos - medicao.retencao
 
   return (
@@ -244,12 +252,14 @@ function MedicaoForm({ medicao, onUpdate }) {
         value={medicao.periodoInicio}
         onChange={v => onUpdate('periodoInicio', v)}
         type="date"
+        readOnly={!isAdmin}
       />
       <FormField
         label="Período — Fim"
         value={medicao.periodoFim}
         onChange={v => onUpdate('periodoFim', v)}
         type="date"
+        readOnly={!isAdmin}
       />
       <div />
 
@@ -257,16 +267,19 @@ function MedicaoForm({ medicao, onUpdate }) {
         label="Valor Bruto"
         value={medicao.valorBruto}
         onChange={v => onUpdate('valorBruto', v)}
+        readOnly={!isAdmin}
       />
       <FormField
         label="Descontos"
         value={medicao.descontos}
         onChange={v => onUpdate('descontos', v)}
+        readOnly={!isAdmin}
       />
       <FormField
         label="Retenção"
         value={medicao.retencao}
         onChange={v => onUpdate('retencao', v)}
+        readOnly={!isAdmin}
       />
 
       <div>
@@ -278,16 +291,18 @@ function MedicaoForm({ medicao, onUpdate }) {
         label="Valor Faturado"
         value={medicao.valorFaturado}
         onChange={v => onUpdate('valorFaturado', v)}
+        readOnly={!isAdmin}
       />
     </div>
   )
 }
 
-function FormField({ label, value, onChange, type = 'number' }) {
+function FormField({ label, value, onChange, type = 'number', readOnly = false }) {
   const [editing, setEditing] = useState(false)
   const [temp, setTemp] = useState('')
 
   function start() {
+    if (readOnly) return
     setTemp(String(value ?? ''))
     setEditing(true)
   }
